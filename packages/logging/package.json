@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/logging",
+  "version": "0.0.1",
+  "description": "Structured logging utilities for TurnkeyHMS microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

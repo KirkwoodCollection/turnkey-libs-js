@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/messaging",
+  "version": "0.0.1",
+  "description": "Pub/Sub and WebSocket messaging patterns for TurnkeyHMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

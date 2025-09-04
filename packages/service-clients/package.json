@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/service-clients",
+  "version": "0.0.1",
+  "description": "HTTP clients for TurnkeyHMS microservice communication",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/cache-utils",
+  "version": "0.0.1",
+  "description": "Caching strategies and utilities for TurnkeyHMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,0 +1,13 @@
+{
+  "name": "@turnkey/libs",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "lerna": "^7.0.0"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap"
+  }
+}

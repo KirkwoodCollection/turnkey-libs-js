@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/error-handling",
+  "version": "0.0.1",
+  "description": "Standardized error types and handling utilities for TurnkeyHMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

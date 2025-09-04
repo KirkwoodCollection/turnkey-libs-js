@@ -1,0 +1,11 @@
+{
+  "name": "@turnkey/data-models",
+  "version": "0.0.1",
+  "description": "Shared data models and TypeScript interfaces for TurnkeyHMS",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "private": true,
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}
