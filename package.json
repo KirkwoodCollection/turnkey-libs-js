@@ -1,13 +1,111 @@
 {
-  "name": "@turnkey/libs",
-  "private": true,
-  "workspaces": [
-    "packages/*"
+  "name": "@turnkey/libs-js",
+  "version": "0.1.0",
+  "description": "Shared JavaScript/TypeScript utilities for TurnkeyHMS frontend services",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md"
   ],
-  "devDependencies": {
-    "lerna": "^7.0.0"
+  "exports": {
+    ".": {
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./core": {
+      "import": "./dist/core-esm/index.js",
+      "require": "./dist/core-cjs/index.js",
+      "types": "./dist/types/core/index.d.ts"
+    },
+    "./react": {
+      "import": "./dist/esm/react/index.js",
+      "require": "./dist/cjs/react/index.js",
+      "types": "./dist/types/react/index.d.ts"
+    }
   },
+  "sideEffects": false,
   "scripts": {
+    "build": "npm run clean && npm run build:types && rollup -c",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist/types",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.{ts,tsx}",
+    "lint:fix": "eslint src/**/*.{ts,tsx} --fix",
+    "format": "prettier --write src/**/*.{ts,tsx}",
+    "format:check": "prettier --check src/**/*.{ts,tsx}",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run test && npm run build",
+    "clear-mock-data": "node scripts/clear-mock-data.js",
+    "dev": "rollup -c -w",
     "bootstrap": "lerna bootstrap"
+  },
+  "peerDependencies": {
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    },
+    "react-dom": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.6",
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "@testing-library/jest-dom": "^6.8.0",
+    "@testing-library/react": "^16.3.0",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.3.1",
+    "@types/react": "^19.1.12",
+    "@types/react-dom": "^19.1.9",
+    "@typescript-eslint/eslint-plugin": "^8.42.0",
+    "@typescript-eslint/parser": "^8.42.0",
+    "eslint": "^9.35.0",
+    "jest": "^30.1.3",
+    "jest-environment-jsdom": "^30.1.2",
+    "lerna": "^7.0.0",
+    "prettier": "^3.6.2",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "rollup": "^4.50.0",
+    "terser": "^5.44.0",
+    "ts-jest": "^29.4.1",
+    "typescript": "^5.9.2"
+  },
+  "keywords": [
+    "turnkey",
+    "hms",
+    "api-client",
+    "websocket",
+    "react",
+    "typescript",
+    "frontend",
+    "utilities",
+    "booking",
+    "analytics"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/turnkeyhms/turnkey-libs-js.git"
+  },
+  "homepage": "https://github.com/turnkeyhms/turnkey-libs-js#readme",
+  "bugs": {
+    "url": "https://github.com/turnkeyhms/turnkey-libs-js/issues"
+  },
+  "license": "MIT",
+  "author": "TurnkeyHMS Team",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
   }
 }
