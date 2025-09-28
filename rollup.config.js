@@ -1,9 +1,9 @@
-import typescript from '@rollup/plugin-typescript';
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import terser from '@rollup/plugin-terser';
+const typescript = require('@rollup/plugin-typescript');
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const terser = require('@rollup/plugin-terser');
 
-export default [
+module.exports = [
   // ESM build
   {
     input: 'src/index.ts',
@@ -18,7 +18,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false // We generate declarations separately
+        declaration: false, // We generate declarations separately
+        declarationMap: false,
+        outDir: undefined // Remove outDir conflict
       }),
       resolve({
         browser: true,
@@ -42,7 +44,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false // Only generate declarations once
+        declaration: false, // Only generate declarations once
+        declarationMap: false,
+        outDir: undefined // Remove outDir conflict
       }),
       resolve({
         preferBuiltins: false
@@ -67,7 +71,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false
+        declaration: false,
+        declarationMap: false,
+        outDir: undefined // Remove outDir conflict
       }),
       resolve({
         browser: true,
@@ -98,7 +104,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false
+        declaration: false,
+        declarationMap: false,
+        outDir: undefined // Remove outDir conflict
       }),
       resolve({
         browser: true,
@@ -122,7 +130,9 @@ export default [
     plugins: [
       typescript({
         tsconfig: './tsconfig.json',
-        declaration: false
+        declaration: false,
+        declarationMap: false,
+        outDir: undefined // Remove outDir conflict
       }),
       resolve({
         preferBuiltins: false
