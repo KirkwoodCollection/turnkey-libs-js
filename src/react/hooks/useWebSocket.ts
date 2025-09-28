@@ -2,12 +2,12 @@
 
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { WebSocketConnectionManager } from '../../core/websocket/connection-manager';
-import { 
+import {
   WebSocketConfig,
   ConnectionState,
   WebSocketMessage,
   SendOptions,
-  WebSocketError
+  WebSocketError,
 } from '../../core/websocket/types';
 
 export interface UseWebSocketOptions extends WebSocketConfig {
@@ -31,7 +31,7 @@ export interface UseWebSocketReturn {
 }
 
 export function useWebSocket(
-  url: string, 
+  url: string,
   options: Omit<UseWebSocketOptions, 'url'> = {}
 ): UseWebSocketReturn {
   const [connectionState, setConnectionState] = useState<ConnectionState>('CLOSED');
@@ -52,27 +52,27 @@ export function useWebSocket(
   useEffect(() => {
     const config: WebSocketConfig = {
       url,
-      ...options
+      ...options,
     };
 
     managerRef.current = new WebSocketConnectionManager(config);
     subscriptionsRef.current = new Set();
 
     // Set up event listeners
-    const unsubscribeStateChange = managerRef.current.onConnectionStateChange((state) => {
+    const unsubscribeStateChange = managerRef.current.onConnectionStateChange(state => {
       setConnectionState(state);
       optionsRef.current.onConnectionChange?.(state);
-      
+
       // Update stats when state changes
       setStats(managerRef.current?.getStats() || {});
     });
 
-    const unsubscribeError = managerRef.current.onError((error) => {
+    const unsubscribeError = managerRef.current.onError(error => {
       setError(error);
       optionsRef.current.onError?.(error);
     });
 
-    const unsubscribeMessage = managerRef.current.subscribe('message', (message) => {
+    const unsubscribeMessage = managerRef.current.subscribe('message', message => {
       setLastMessage(message);
       optionsRef.current.onMessage?.(message);
     });
@@ -84,7 +84,7 @@ export function useWebSocket(
 
     // Auto-connect if enabled
     if (options.autoConnect !== false) {
-      managerRef.current.connect().catch((err) => {
+      managerRef.current.connect().catch(err => {
         console.error('Auto-connect failed:', err);
       });
     }
@@ -134,20 +134,23 @@ export function useWebSocket(
     }
   }, []);
 
-  const subscribe = useCallback((eventType: string, handler: (message: WebSocketMessage) => void) => {
-    if (!managerRef.current) {
-      return () => {}; // Return no-op function
-    }
+  const subscribe = useCallback(
+    (eventType: string, handler: (message: WebSocketMessage) => void) => {
+      if (!managerRef.current) {
+        return () => {}; // Return no-op function
+      }
 
-    const unsubscribe = managerRef.current.subscribe(eventType, handler);
-    subscriptionsRef.current?.add(unsubscribe);
+      const unsubscribe = managerRef.current.subscribe(eventType, handler);
+      subscriptionsRef.current?.add(unsubscribe);
 
-    // Return a wrapper that also removes from our set
-    return () => {
-      unsubscribe();
-      subscriptionsRef.current?.delete(unsubscribe);
-    };
-  }, []);
+      // Return a wrapper that also removes from our set
+      return () => {
+        unsubscribe();
+        subscriptionsRef.current?.delete(unsubscribe);
+      };
+    },
+    []
+  );
 
   const clearError = useCallback(() => {
     setError(null);
@@ -165,17 +168,23 @@ export function useWebSocket(
     send,
     subscribe,
     clearError,
-    stats
+    stats,
   };
 }
 
 // Convenience hook for specific WebSocket endpoints
-export function useBookingWebSocket(baseUrl: string, options: Omit<UseWebSocketOptions, 'url'> = {}) {
+export function useBookingWebSocket(
+  baseUrl: string,
+  options: Omit<UseWebSocketOptions, 'url'> = {}
+) {
   const url = baseUrl.replace(/^http/, 'ws') + '/booking';
   return useWebSocket(url, options);
 }
 
-export function useAnalyticsWebSocket(baseUrl: string, options: Omit<UseWebSocketOptions, 'url'> = {}) {
+export function useAnalyticsWebSocket(
+  baseUrl: string,
+  options: Omit<UseWebSocketOptions, 'url'> = {}
+) {
   const url = baseUrl.replace(/^http/, 'ws') + '/analytics';
   return useWebSocket(url, options);
 }

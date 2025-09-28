@@ -2,10 +2,10 @@
 
 export const HTTP_METHODS = {
   GET: 'GET',
-  POST: 'POST', 
+  POST: 'POST',
   PUT: 'PUT',
   DELETE: 'DELETE',
-  PATCH: 'PATCH'
+  PATCH: 'PATCH',
 } as const;
 
 export const CONNECTION_STATES = {
@@ -13,7 +13,7 @@ export const CONNECTION_STATES = {
   OPEN: 'OPEN',
   CLOSING: 'CLOSING',
   CLOSED: 'CLOSED',
-  RECONNECTING: 'RECONNECTING'
+  RECONNECTING: 'RECONNECTING',
 } as const;
 
 export const ERROR_TYPES = {
@@ -23,7 +23,7 @@ export const ERROR_TYPES = {
   RECONNECT_FAILED: 'RECONNECT_FAILED',
   API_ERROR: 'API_ERROR',
   VALIDATION_ERROR: 'VALIDATION_ERROR',
-  TIMEOUT_ERROR: 'TIMEOUT_ERROR'
+  TIMEOUT_ERROR: 'TIMEOUT_ERROR',
 } as const;
 
 export const DEFAULT_CONFIG = {
@@ -33,7 +33,7 @@ export const DEFAULT_CONFIG = {
   MAX_RETRY_DELAY: 30000,
   HEARTBEAT_INTERVAL: 30000,
   HEARTBEAT_TIMEOUT: 5000,
-  MAX_RECONNECT_ATTEMPTS: 10
+  MAX_RECONNECT_ATTEMPTS: 10,
 } as const;
 
 export const MIME_TYPES = {
@@ -41,7 +41,7 @@ export const MIME_TYPES = {
   FORM_DATA: 'multipart/form-data',
   URL_ENCODED: 'application/x-www-form-urlencoded',
   TEXT: 'text/plain',
-  HTML: 'text/html'
+  HTML: 'text/html',
 } as const;
 
 export const HTTP_STATUS = {
@@ -58,7 +58,7 @@ export const HTTP_STATUS = {
   INTERNAL_SERVER_ERROR: 500,
   BAD_GATEWAY: 502,
   SERVICE_UNAVAILABLE: 503,
-  GATEWAY_TIMEOUT: 504
+  GATEWAY_TIMEOUT: 504,
 } as const;
 
 export const EVENT_TYPES = {
@@ -66,33 +66,52 @@ export const EVENT_TYPES = {
   MESSAGE_RECEIVED: 'message',
   ERROR_OCCURRED: 'error',
   HEARTBEAT_PING: 'ping',
-  HEARTBEAT_PONG: 'pong'
+  HEARTBEAT_PONG: 'pong',
 } as const;
 
 export const STORAGE_KEYS = {
   AUTH_TOKEN: 'turnkey_auth_token',
   REFRESH_TOKEN: 'turnkey_refresh_token',
   SESSION_ID: 'turnkey_session_id',
-  USER_PREFERENCES: 'turnkey_user_preferences'
+  USER_PREFERENCES: 'turnkey_user_preferences',
 } as const;
 
 export const VALIDATION_PATTERNS = {
   EMAIL: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   PHONE: /^\+?[\d\s\-\(\)]+$/,
   UUID: /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i,
-  ISO_DATE: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?$/
+  ISO_DATE: /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?$/,
 } as const;
 
 export const CURRENCY_CODES = [
-  'USD', 'EUR', 'GBP', 'CAD', 'AUD', 'JPY', 'CHF', 'CNY', 'INR', 'BRL',
-  'MXN', 'SGD', 'HKD', 'SEK', 'NOK', 'DKK', 'PLN', 'CZK', 'HUF', 'ILS'
+  'USD',
+  'EUR',
+  'GBP',
+  'CAD',
+  'AUD',
+  'JPY',
+  'CHF',
+  'CNY',
+  'INR',
+  'BRL',
+  'MXN',
+  'SGD',
+  'HKD',
+  'SEK',
+  'NOK',
+  'DKK',
+  'PLN',
+  'CZK',
+  'HUF',
+  'ILS',
 ] as const;
 
 // Environment detection utilities
 export const ENV_CHECKS = {
   isBrowser: () => typeof window !== 'undefined',
   isNode: () => typeof process !== 'undefined' && process.versions && process.versions.node,
-  isWebWorker: () => typeof self !== 'undefined' && typeof (self as any).importScripts === 'function',
+  isWebWorker: () =>
+    typeof self !== 'undefined' && typeof (self as any).importScripts === 'function',
   hasLocalStorage: () => {
     try {
       return typeof localStorage !== 'undefined';
@@ -108,5 +127,5 @@ export const ENV_CHECKS = {
     }
   },
   hasWebSocket: () => typeof WebSocket !== 'undefined',
-  hasFetch: () => typeof fetch !== 'undefined'
+  hasFetch: () => typeof fetch !== 'undefined',
 } as const;

@@ -35,16 +35,16 @@ export function useApiClient(options: UseApiClientOptions): UseApiClientReturn {
     class ConcreteApiClient extends BaseApiClient {
       constructor(config: ApiClientConfig) {
         super(config);
-        
+
         // Add error interceptor
-        this.addErrorInterceptor(async (error) => {
+        this.addErrorInterceptor(async error => {
           setError(error);
           optionsRef.current.onError?.(error);
           return error;
         });
 
         // Add response interceptor
-        this.addResponseInterceptor(async (response) => {
+        this.addResponseInterceptor(async response => {
           optionsRef.current.onResponse?.(response);
           return response;
         });
@@ -77,10 +77,9 @@ export function useApiClient(options: UseApiClientOptions): UseApiClientReturn {
     if (!clientRef.current) return;
 
     const originalRequest = clientRef.current.get.bind(clientRef.current);
-    
+
     // This is a simplified example - in a full implementation,
     // you'd wrap all HTTP methods to handle loading state
-    
   }, []);
 
   return {
@@ -88,7 +87,7 @@ export function useApiClient(options: UseApiClientOptions): UseApiClientReturn {
     loading,
     error,
     clearError,
-    updateConfig
+    updateConfig,
   };
 }
 
@@ -98,8 +97,8 @@ export function useBookingApiClient(config: UseApiClientOptions) {
     ...config,
     headers: {
       'X-Service': 'booking',
-      ...config.headers
-    }
+      ...config.headers,
+    },
   });
 }
 
@@ -108,7 +107,7 @@ export function useAnalyticsApiClient(config: UseApiClientOptions) {
     ...config,
     headers: {
       'X-Service': 'analytics',
-      ...config.headers
-    }
+      ...config.headers,
+    },
   });
 }

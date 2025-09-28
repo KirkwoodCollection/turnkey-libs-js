@@ -14,9 +14,9 @@ export class ReconnectionStrategy {
       maxAttempts: 10,
       initialDelay: 1000,
       maxDelay: 30000,
-      exponentialBackoff: true
+      exponentialBackoff: true,
     };
-    
+
     this.options = { ...defaultOptions, ...options };
   }
 
@@ -43,9 +43,7 @@ export class ReconnectionStrategy {
   // Check if reconnection should be attempted
   shouldReconnect(): boolean {
     return (
-      this.options.enabled &&
-      this.currentAttempt < this.options.maxAttempts &&
-      !this.isReconnecting
+      this.options.enabled && this.currentAttempt < this.options.maxAttempts && !this.isReconnecting
     );
   }
 
@@ -59,8 +57,8 @@ export class ReconnectionStrategy {
     this.currentAttempt++;
 
     const delay = this.getDelay();
-    
-    return new Promise((resolve) => {
+
+    return new Promise(resolve => {
       this.reconnectTimeout = setTimeout(async () => {
         try {
           await reconnectFn();
@@ -109,7 +107,7 @@ export class ReconnectionStrategy {
       currentAttempt: this.currentAttempt,
       maxAttempts: this.options.maxAttempts,
       nextDelay: this.getDelay(),
-      canReconnect: this.shouldReconnect()
+      canReconnect: this.shouldReconnect(),
     };
   }
 

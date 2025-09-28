@@ -9,12 +9,12 @@ export class BookingApiClient extends BaseApiClient {
       ...config,
       headers: {
         'X-Service': 'booking',
-        ...config.headers
-      }
+        ...config.headers,
+      },
     });
 
     // Add booking-specific request interceptor for auth tokens
-    this.addRequestInterceptor(async (config) => {
+    this.addRequestInterceptor(async config => {
       // This would be implemented by consuming services
       // to add their specific authentication headers
       return config;
@@ -22,7 +22,10 @@ export class BookingApiClient extends BaseApiClient {
   }
 
   // Generic booking operations - consuming services implement specific logic
-  async searchAvailability<T = any>(searchParams: any, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async searchAvailability<T = any>(
+    searchParams: any,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.post<T>('/search', searchParams, config);
   }
 
@@ -38,7 +41,11 @@ export class BookingApiClient extends BaseApiClient {
     return this.get<T>(`/bookings/${bookingId}`, config);
   }
 
-  async updateBooking<T = any>(bookingId: string, updateData: any, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async updateBooking<T = any>(
+    bookingId: string,
+    updateData: any,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.put<T>(`/bookings/${bookingId}`, updateData, config);
   }
 
@@ -51,11 +58,14 @@ export class BookingApiClient extends BaseApiClient {
   }
 
   // Utility method for batched requests
-  async batchRequest<T = any>(requests: Array<{
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-    path: string;
-    data?: any;
-  }>, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async batchRequest<T = any>(
+    requests: Array<{
+      method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+      path: string;
+      data?: any;
+    }>,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.post<T>('/batch', { requests }, config);
   }
 }

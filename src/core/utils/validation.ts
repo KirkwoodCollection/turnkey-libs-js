@@ -8,7 +8,10 @@ export interface ValidationResult {
 }
 
 export class ValidationError extends Error {
-  constructor(message: string, public field?: string) {
+  constructor(
+    message: string,
+    public field?: string
+  ) {
     super(message);
     this.name = 'ValidationError';
   }
@@ -119,7 +122,10 @@ export function validateISODate(dateString: string): ValidationResult {
   return { isValid: true };
 }
 
-export function validateDateRange(startDate: string | Date, endDate: string | Date): ValidationResult {
+export function validateDateRange(
+  startDate: string | Date,
+  endDate: string | Date
+): ValidationResult {
   const start = typeof startDate === 'string' ? new Date(startDate) : startDate;
   const end = typeof endDate === 'string' ? new Date(endDate) : endDate;
 
@@ -201,43 +207,51 @@ export function validateAmount(amount: number, currency: string): ValidationResu
 // Object validators
 export function validateRequired<T>(value: T, fieldName?: string): ValidationResult {
   if (value === null || value === undefined || value === '') {
-    return { 
-      isValid: false, 
-      error: fieldName ? `${fieldName} is required` : 'Value is required' 
+    return {
+      isValid: false,
+      error: fieldName ? `${fieldName} is required` : 'Value is required',
     };
   }
 
   return { isValid: true };
 }
 
-export function validateMaxLength(value: string, maxLength: number, fieldName?: string): ValidationResult {
+export function validateMaxLength(
+  value: string,
+  maxLength: number,
+  fieldName?: string
+): ValidationResult {
   if (!isString(value)) {
     return { isValid: false, error: 'Value must be a string' };
   }
 
   if (value.length > maxLength) {
-    return { 
-      isValid: false, 
-      error: fieldName 
-        ? `${fieldName} must not exceed ${maxLength} characters` 
-        : `Value must not exceed ${maxLength} characters`
+    return {
+      isValid: false,
+      error: fieldName
+        ? `${fieldName} must not exceed ${maxLength} characters`
+        : `Value must not exceed ${maxLength} characters`,
     };
   }
 
   return { isValid: true };
 }
 
-export function validateMinLength(value: string, minLength: number, fieldName?: string): ValidationResult {
+export function validateMinLength(
+  value: string,
+  minLength: number,
+  fieldName?: string
+): ValidationResult {
   if (!isString(value)) {
     return { isValid: false, error: 'Value must be a string' };
   }
 
   if (value.length < minLength) {
-    return { 
-      isValid: false, 
-      error: fieldName 
-        ? `${fieldName} must be at least ${minLength} characters` 
-        : `Value must be at least ${minLength} characters`
+    return {
+      isValid: false,
+      error: fieldName
+        ? `${fieldName} must be at least ${minLength} characters`
+        : `Value must be at least ${minLength} characters`,
     };
   }
 
@@ -246,7 +260,7 @@ export function validateMinLength(value: string, minLength: number, fieldName?: 
 
 // Composite validator
 export function validate<T>(
-  value: T, 
+  value: T,
   validators: Array<(value: T) => ValidationResult>,
   fieldName?: string
 ): ValidationResult {
@@ -255,9 +269,8 @@ export function validate<T>(
     if (!result.isValid) {
       return {
         isValid: false,
-        error: fieldName && result.error 
-          ? result.error.replace(/Value|value/, fieldName)
-          : result.error
+        error:
+          fieldName && result.error ? result.error.replace(/Value|value/, fieldName) : result.error,
       };
     }
   }

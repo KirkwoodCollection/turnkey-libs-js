@@ -35,30 +35,30 @@ export class TurnkeyApiError extends Error implements ApiError {
   }
 }
 
-export function createApiError(
-  message: string,
-  status?: number,
-  response?: any
-): TurnkeyApiError {
+export function createApiError(message: string, status?: number, response?: any): TurnkeyApiError {
   return new TurnkeyApiError(message, {
     status,
     statusText: response?.statusText || getStatusText(status),
     code: `API_ERROR_${status || 'UNKNOWN'}`,
-    response: response ? {
-      data: response.data,
-      status: response.status || status || 0,
-      statusText: response.statusText || getStatusText(status)
-    } : undefined
+    response: response
+      ? {
+          data: response.data,
+          status: response.status || status || 0,
+          statusText: response.statusText || getStatusText(status),
+        }
+      : undefined,
   });
 }
 
 export function isRetryableError(error: ApiError): boolean {
   if (!error.status) return false;
-  
+
   // Retry on server errors (5xx) and specific client errors
-  return error.status >= 500 || 
-         error.status === 408 || // Request Timeout
-         error.status === 429;   // Too Many Requests
+  return (
+    error.status >= 500 ||
+    error.status === 408 || // Request Timeout
+    error.status === 429
+  ); // Too Many Requests
 }
 
 export function getStatusText(status?: number): string {
@@ -72,7 +72,7 @@ export function getStatusText(status?: number): string {
     500: 'Internal Server Error',
     502: 'Bad Gateway',
     503: 'Service Unavailable',
-    504: 'Gateway Timeout'
+    504: 'Gateway Timeout',
   };
 
   return statusTexts[status || 0] || 'Unknown Error';
@@ -91,6 +91,6 @@ export function handleApiError(error: any): never {
   // Handle generic errors
   const message = error.message || 'An unexpected error occurred';
   const status = error.status || error.response?.status;
-  
+
   throw createApiError(message, status, error.response);
 }

@@ -14,9 +14,11 @@ export class EventEmitter {
     }
 
     const listenersSet = this.listeners.get(event)!;
-    
+
     if (listenersSet.size >= this.maxListeners) {
-      console.warn(`EventEmitter: Maximum listeners (${this.maxListeners}) exceeded for event: ${event}`);
+      console.warn(
+        `EventEmitter: Maximum listeners (${this.maxListeners}) exceeded for event: ${event}`
+      );
     }
 
     listenersSet.add(listener);
@@ -99,7 +101,7 @@ export class EventEmitter {
       hasListeners = true;
       const onceListeners = Array.from(onceListenersSet);
       this.onceListeners.delete(event); // Remove all once listeners
-      
+
       onceListeners.forEach(listener => {
         try {
           listener(data);

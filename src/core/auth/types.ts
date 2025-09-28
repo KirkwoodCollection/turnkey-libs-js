@@ -59,9 +59,9 @@ export interface RefreshTokenResponse {
   expiresIn: number;
 }
 
-export type AuthEventType = 
-  | 'TOKEN_REFRESHED' 
-  | 'TOKEN_EXPIRED' 
+export type AuthEventType =
+  | 'TOKEN_REFRESHED'
+  | 'TOKEN_EXPIRED'
   | 'TOKEN_REFRESH_FAILED'
   | 'USER_SIGNED_IN'
   | 'USER_SIGNED_OUT'

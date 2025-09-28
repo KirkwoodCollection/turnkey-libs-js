@@ -9,19 +9,19 @@ export class AnalyticsApiClient extends BaseApiClient {
       ...config,
       headers: {
         'X-Service': 'analytics',
-        ...config.headers
-      }
+        ...config.headers,
+      },
     });
 
     // Add analytics-specific request interceptor
-    this.addRequestInterceptor(async (config) => {
+    this.addRequestInterceptor(async config => {
       // Add timestamp to all analytics requests
       return {
         ...config,
         headers: {
           ...config.headers,
-          'X-Timestamp': new Date().toISOString()
-        }
+          'X-Timestamp': new Date().toISOString(),
+        },
       };
     });
   }
@@ -43,15 +43,24 @@ export class AnalyticsApiClient extends BaseApiClient {
     return this.post<T>('/funnel', funnelParams, config);
   }
 
-  async getConversionRates<T = any>(conversionParams: any, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async getConversionRates<T = any>(
+    conversionParams: any,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.post<T>('/conversions', conversionParams, config);
   }
 
-  async getUserJourney<T = any>(sessionId: string, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async getUserJourney<T = any>(
+    sessionId: string,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.get<T>(`/journey/${sessionId}`, config);
   }
 
-  async getSessionData<T = any>(sessionId: string, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async getSessionData<T = any>(
+    sessionId: string,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.get<T>(`/sessions/${sessionId}`, config);
   }
 
@@ -59,7 +68,10 @@ export class AnalyticsApiClient extends BaseApiClient {
     return this.post<T>('/segments', segmentData, config);
   }
 
-  async getSegmentData<T = any>(segmentId: string, config?: RequestConfig): Promise<ApiResponse<T>> {
+  async getSegmentData<T = any>(
+    segmentId: string,
+    config?: RequestConfig
+  ): Promise<ApiResponse<T>> {
     return this.get<T>(`/segments/${segmentId}`, config);
   }
 
@@ -67,7 +79,7 @@ export class AnalyticsApiClient extends BaseApiClient {
   async trackPageView<T = any>(pageViewData: any, config?: RequestConfig): Promise<ApiResponse<T>> {
     return this.post<T>('/pageviews', pageViewData, {
       ...config,
-      timeout: 2000 // Shorter timeout for page tracking
+      timeout: 2000, // Shorter timeout for page tracking
     });
   }
 }

@@ -8,7 +8,7 @@ import {
   ResponseInterceptor,
   ErrorInterceptor,
   HttpMethod,
-  RetryOptions
+  RetryOptions,
 } from './types';
 import { TurnkeyApiError, createApiError, isRetryableError, handleApiError } from './error-handler';
 
@@ -26,7 +26,7 @@ export abstract class BaseApiClient {
     this.baseUrl = config.baseUrl.replace(/\/$/, ''); // Remove trailing slash
     this.defaultHeaders = {
       'Content-Type': 'application/json',
-      ...config.headers
+      ...config.headers,
     };
     this.defaultTimeout = config.timeout || 10000;
     this.defaultRetryAttempts = config.retryAttempts || 3;
@@ -84,7 +84,7 @@ export abstract class BaseApiClient {
 
     const retryOptions: RetryOptions = {
       attempts: requestConfig.retryAttempts || this.defaultRetryAttempts,
-      delay: this.defaultRetryDelay
+      delay: this.defaultRetryDelay,
     };
 
     return this.executeWithRetry(
@@ -105,11 +105,14 @@ export abstract class BaseApiClient {
       try {
         return await requestFn();
       } catch (error) {
-        lastError = error instanceof TurnkeyApiError ? error : createApiError(
-          error instanceof Error ? error.message : 'Unknown error',
-          (error as any).status,
-          (error as any).response
-        );
+        lastError =
+          error instanceof TurnkeyApiError
+            ? error
+            : createApiError(
+                error instanceof Error ? error.message : 'Unknown error',
+                (error as any).status,
+                (error as any).response
+              );
 
         // Don't retry on the last attempt
         if (attempt === retryOptions.attempts) {
@@ -161,7 +164,7 @@ export abstract class BaseApiClient {
       const fetchOptions: RequestInit = {
         method,
         headers,
-        signal: controller.signal
+        signal: controller.signal,
       };
 
       if (data && method !== 'GET') {
@@ -173,18 +176,18 @@ export abstract class BaseApiClient {
 
       let responseData: T;
       const contentType = response.headers.get('content-type');
-      
+
       if (contentType && contentType.includes('application/json')) {
         responseData = await response.json();
       } else {
-        responseData = await response.text() as unknown as T;
+        responseData = (await response.text()) as unknown as T;
       }
 
       const apiResponse: ApiResponse<T> = {
         data: responseData,
         status: response.status,
         statusText: response.statusText,
-        headers: this.extractHeaders(response.headers)
+        headers: this.extractHeaders(response.headers),
       };
 
       if (!response.ok) {
@@ -204,7 +207,7 @@ export abstract class BaseApiClient {
       return processedResponse;
     } catch (error) {
       clearTimeout(timeoutId);
-      
+
       if (error instanceof TurnkeyApiError) {
         throw error;
       }
@@ -224,7 +227,7 @@ export abstract class BaseApiClient {
       headers: { ...this.defaultHeaders, ...config?.headers },
       timeout: config?.timeout || this.defaultTimeout,
       retryAttempts: config?.retryAttempts || this.defaultRetryAttempts,
-      params: config?.params
+      params: config?.params,
     };
   }
 

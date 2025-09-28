@@ -9,7 +9,7 @@ import {
   ErrorHandler,
   WebSocketError,
   SendOptions,
-  WebSocketStats
+  WebSocketStats,
 } from './types';
 import { EventEmitter } from './event-emitter';
 import { ReconnectionStrategy } from './reconnection-strategy';
@@ -23,24 +23,27 @@ export class WebSocketConnectionManager {
   private heartbeatInterval: NodeJS.Timeout | null = null;
   private heartbeatTimeout: NodeJS.Timeout | null = null;
   private stats: WebSocketStats;
-  private pendingMessages: Map<string, {
-    resolve: (value: WebSocketMessage) => void;
-    reject: (error: Error) => void;
-    timeout: NodeJS.Timeout;
-  }> = new Map();
+  private pendingMessages: Map<
+    string,
+    {
+      resolve: (value: WebSocketMessage) => void;
+      reject: (error: Error) => void;
+      timeout: NodeJS.Timeout;
+    }
+  > = new Map();
 
   constructor(config: WebSocketConfig) {
     this.config = {
       heartbeatInterval: 30000, // 30 seconds
-      heartbeatTimeout: 5000,   // 5 seconds
+      heartbeatTimeout: 5000, // 5 seconds
       reconnectOptions: {
         enabled: true,
         maxAttempts: 10,
         initialDelay: 1000,
         maxDelay: 30000,
-        exponentialBackoff: true
+        exponentialBackoff: true,
       },
-      ...config
+      ...config,
     };
 
     this.eventEmitter = new EventEmitter();
@@ -50,7 +53,7 @@ export class WebSocketConnectionManager {
       successfulConnections: 0,
       reconnectAttempts: 0,
       messagesSent: 0,
-      messagesReceived: 0
+      messagesReceived: 0,
     };
   }
 
@@ -66,7 +69,7 @@ export class WebSocketConnectionManager {
     return new Promise((resolve, reject) => {
       try {
         this.ws = new WebSocket(this.config.url, this.config.protocols);
-        
+
         this.ws.onopen = () => {
           this.stats.successfulConnections++;
           this.stats.lastConnectedAt = new Date().toISOString();
@@ -76,21 +79,20 @@ export class WebSocketConnectionManager {
           resolve();
         };
 
-        this.ws.onmessage = (event) => {
+        this.ws.onmessage = event => {
           this.handleMessage(event);
         };
 
-        this.ws.onclose = (event) => {
+        this.ws.onclose = event => {
           this.handleClose(event);
         };
 
-        this.ws.onerror = (event) => {
+        this.ws.onerror = event => {
           this.handleError(event);
           if (this.connectionState === 'CONNECTING') {
             reject(new Error('Failed to connect to WebSocket server'));
           }
         };
-
       } catch (error) {
         this.setConnectionState('CLOSED');
         reject(error);
@@ -101,8 +103,11 @@ export class WebSocketConnectionManager {
   async disconnect(): Promise<void> {
     this.reconnectionStrategy.setEnabled(false);
     this.stopHeartbeat();
-    
-    if (this.ws && (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)) {
+
+    if (
+      this.ws &&
+      (this.ws.readyState === WebSocket.OPEN || this.ws.readyState === WebSocket.CONNECTING)
+    ) {
       this.setConnectionState('CLOSING');
       this.ws.close(1000, 'Client initiated disconnect');
     } else {
@@ -127,7 +132,7 @@ export class WebSocketConnectionManager {
       ...message,
       id: message.id || this.generateMessageId(),
       timestamp: new Date().toISOString(),
-      correlationId: options.correlationId || message.correlationId
+      correlationId: options.correlationId || message.correlationId,
     };
 
     if (options.expectResponse && messageToSend.id) {
@@ -139,10 +144,13 @@ export class WebSocketConnectionManager {
     this.stats.messagesSent++;
   }
 
-  private async sendWithResponse(message: WebSocketMessage, timeout = 10000): Promise<WebSocketMessage> {
+  private async sendWithResponse(
+    message: WebSocketMessage,
+    timeout = 10000
+  ): Promise<WebSocketMessage> {
     return new Promise((resolve, reject) => {
       const messageId = message.id!;
-      
+
       const timeoutHandle = setTimeout(() => {
         this.pendingMessages.delete(messageId);
         reject(new Error(`Message timeout after ${timeout}ms`));
@@ -151,7 +159,7 @@ export class WebSocketConnectionManager {
       this.pendingMessages.set(messageId, {
         resolve,
         reject,
-        timeout: timeoutHandle
+        timeout: timeoutHandle,
       });
 
       this.ws!.send(JSON.stringify(message));
@@ -198,7 +206,7 @@ export class WebSocketConnectionManager {
     if (this.connectionState !== state) {
       this.connectionState = state;
       this.eventEmitter.emit('connectionStateChanged', state);
-      
+
       if (state === 'CLOSED') {
         this.stats.lastDisconnectedAt = new Date().toISOString();
       }
@@ -228,7 +236,6 @@ export class WebSocketConnectionManager {
       // Emit to subscribers
       this.eventEmitter.emit('message', message);
       this.eventEmitter.emit(message.type, message);
-
     } catch (error) {
       this.emitError('MESSAGE_SEND_FAILED', 'Failed to parse incoming message', error as Error);
     }
@@ -288,7 +295,7 @@ export class WebSocketConnectionManager {
       const heartbeatMessage: WebSocketMessage = {
         type: 'ping',
         timestamp: new Date().toISOString(),
-        payload: {}
+        payload: {},
       };
 
       this.ws!.send(JSON.stringify(heartbeatMessage));
@@ -312,12 +319,16 @@ export class WebSocketConnectionManager {
     }
   }
 
-  private emitError(type: WebSocketError['type'], message: string, originalError?: Error | Event): void {
+  private emitError(
+    type: WebSocketError['type'],
+    message: string,
+    originalError?: Error | Event
+  ): void {
     const error: WebSocketError = {
       type,
       message,
       originalError,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.eventEmitter.emit('error', error);
@@ -330,7 +341,7 @@ export class WebSocketConnectionManager {
   // Update configuration
   updateConfig(newConfig: Partial<WebSocketConfig>): void {
     this.config = { ...this.config, ...newConfig };
-    
+
     if (newConfig.reconnectOptions) {
       this.reconnectionStrategy.updateOptions(newConfig.reconnectOptions);
     }

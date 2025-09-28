@@ -26,7 +26,7 @@ export function useEventBus(options: UseEventBusOptions = {}): UseEventBusReturn
     if (!eventEmitterRef.current) {
       eventEmitterRef.current = new EventEmitter();
       subscriptionsRef.current = new Set();
-      
+
       if (options.maxListeners) {
         eventEmitterRef.current.setMaxListeners(options.maxListeners);
       }
@@ -36,7 +36,7 @@ export function useEventBus(options: UseEventBusOptions = {}): UseEventBusReturn
       // Clean up all subscriptions
       subscriptionsRef.current?.forEach(unsubscribe => unsubscribe());
       subscriptionsRef.current?.clear();
-      
+
       // Clean up event emitter
       eventEmitterRef.current?.removeAllListeners();
     };
@@ -103,7 +103,7 @@ export function useEventBus(options: UseEventBusOptions = {}): UseEventBusReturn
     unsubscribe,
     listenerCount,
     eventNames,
-    removeAllListeners
+    removeAllListeners,
   };
 }
 
@@ -113,40 +113,40 @@ export function useTypedEventBus<EventMap extends Record<string, any>>(
 ) {
   const eventBus = useEventBus(options);
 
-  const typedEmit = useCallback(<K extends keyof EventMap>(
-    event: K,
-    data: EventMap[K]
-  ): boolean => {
-    return eventBus.emit(event as string, data);
-  }, [eventBus]);
+  const typedEmit = useCallback(
+    <K extends keyof EventMap>(event: K, data: EventMap[K]): boolean => {
+      return eventBus.emit(event as string, data);
+    },
+    [eventBus]
+  );
 
-  const typedSubscribe = useCallback(<K extends keyof EventMap>(
-    event: K,
-    handler: (data: EventMap[K]) => void
-  ) => {
-    return eventBus.subscribe(event as string, handler);
-  }, [eventBus]);
+  const typedSubscribe = useCallback(
+    <K extends keyof EventMap>(event: K, handler: (data: EventMap[K]) => void) => {
+      return eventBus.subscribe(event as string, handler);
+    },
+    [eventBus]
+  );
 
-  const typedSubscribeOnce = useCallback(<K extends keyof EventMap>(
-    event: K,
-    handler: (data: EventMap[K]) => void
-  ) => {
-    return eventBus.subscribeOnce(event as string, handler);
-  }, [eventBus]);
+  const typedSubscribeOnce = useCallback(
+    <K extends keyof EventMap>(event: K, handler: (data: EventMap[K]) => void) => {
+      return eventBus.subscribeOnce(event as string, handler);
+    },
+    [eventBus]
+  );
 
-  const typedUnsubscribe = useCallback(<K extends keyof EventMap>(
-    event: K,
-    handler?: (data: EventMap[K]) => void
-  ) => {
-    eventBus.unsubscribe(event as string, handler);
-  }, [eventBus]);
+  const typedUnsubscribe = useCallback(
+    <K extends keyof EventMap>(event: K, handler?: (data: EventMap[K]) => void) => {
+      eventBus.unsubscribe(event as string, handler);
+    },
+    [eventBus]
+  );
 
   return {
     ...eventBus,
     emit: typedEmit,
     subscribe: typedSubscribe,
     subscribeOnce: typedSubscribeOnce,
-    unsubscribe: typedUnsubscribe
+    unsubscribe: typedUnsubscribe,
   };
 }
 

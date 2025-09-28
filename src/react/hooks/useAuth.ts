@@ -27,13 +27,13 @@ class AuthManager extends EventEmitter {
     user: null,
     token: null,
     loading: false,
-    error: null
+    error: null,
   };
 
   private refreshTimer: NodeJS.Timeout | null = null;
 
   private options: UseAuthOptions;
-  
+
   constructor(options: UseAuthOptions = {}) {
     super();
     this.options = options;
@@ -55,7 +55,7 @@ class AuthManager extends EventEmitter {
       token,
       user: user || null,
       error: null,
-      loading: false
+      loading: false,
     });
 
     if (this.options.autoRefresh !== false) {
@@ -72,7 +72,7 @@ class AuthManager extends EventEmitter {
       user: null,
       token: null,
       error: null,
-      loading: false
+      loading: false,
     });
 
     this.emit('authEvent', { type: 'USER_SIGNED_OUT' });
@@ -116,7 +116,7 @@ class AuthManager extends EventEmitter {
       // In a real implementation, you'd call your token refresh endpoint
       const newToken: AuthToken = {
         ...this.state.token,
-        expiresAt: Date.now() + (this.state.token.expiresIn * 1000)
+        expiresAt: Date.now() + this.state.token.expiresIn * 1000,
       };
 
       this.setState({ token: newToken, loading: false, error: null });
@@ -134,7 +134,7 @@ class AuthManager extends EventEmitter {
     this.clearRefreshTimer();
 
     const threshold = this.options.refreshThreshold || 300; // 5 minutes
-    const refreshTime = token.expiresAt - Date.now() - (threshold * 1000);
+    const refreshTime = token.expiresAt - Date.now() - threshold * 1000;
 
     if (refreshTime > 0) {
       this.refreshTimer = setTimeout(() => {
@@ -162,7 +162,7 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
     user: null,
     token: null,
     loading: false,
-    error: null
+    error: null,
   });
 
   const managerRef = useRef<AuthManager>(new AuthManager());
@@ -219,7 +219,7 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
     signOut,
     refreshToken,
     updateUser,
-    clearError
+    clearError,
   };
 }
 
@@ -227,10 +227,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
 export function usePermissions(requiredPermissions: string[] = []) {
   const { user, isAuthenticated } = useAuth();
 
-  const hasPermission = useCallback((permission: string) => {
-    if (!isAuthenticated || !user?.permissions) return false;
-    return user.permissions.includes(permission);
-  }, [isAuthenticated, user?.permissions]);
+  const hasPermission = useCallback(
+    (permission: string) => {
+      if (!isAuthenticated || !user?.permissions) return false;
+      return user.permissions.includes(permission);
+    },
+    [isAuthenticated, user?.permissions]
+  );
 
   const hasAllPermissions = useCallback(() => {
     return requiredPermissions.every(permission => hasPermission(permission));
@@ -244,6 +247,6 @@ export function usePermissions(requiredPermissions: string[] = []) {
     hasPermission,
     hasAllPermissions: hasAllPermissions(),
     hasAnyPermission: hasAnyPermission(),
-    permissions: user?.permissions || []
+    permissions: user?.permissions || [],
   };
 }
