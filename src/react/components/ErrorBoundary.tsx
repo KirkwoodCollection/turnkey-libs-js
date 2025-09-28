@@ -10,8 +10,8 @@ export interface ErrorBoundaryState {
 
 export interface ErrorBoundaryProps {
   children: ReactNode;
-  fallback?: ReactNode | ((error: Error, errorInfo: ErrorInfo) => ReactNode);
-  onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  fallback?: ReactNode | ((_error: Error, _errorInfo: ErrorInfo) => ReactNode);
+  onError?: (_error: Error, _errorInfo: ErrorInfo) => void;
 }
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {

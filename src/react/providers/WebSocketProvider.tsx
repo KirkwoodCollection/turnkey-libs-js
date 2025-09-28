@@ -49,7 +49,7 @@ export function BookingWebSocketProvider({
   baseUrl, 
   options = {} 
 }: BookingWebSocketProviderProps) {
-  const url = baseUrl.replace(/^http/, 'ws') + '/booking';
+  const url = `${baseUrl.replace(/^http/, 'ws')  }/booking`;
   
   return (
     <WebSocketProvider config={{ url, options }}>
@@ -69,7 +69,7 @@ export function AnalyticsWebSocketProvider({
   baseUrl, 
   options = {} 
 }: AnalyticsWebSocketProviderProps) {
-  const url = baseUrl.replace(/^http/, 'ws') + '/analytics';
+  const url = `${baseUrl.replace(/^http/, 'ws')  }/analytics`;
   
   return (
     <WebSocketProvider config={{ url, options }}>

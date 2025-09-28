@@ -41,7 +41,7 @@ export function LoadingSpinner({
     gap: '8px',
     fontFamily: 'system-ui, sans-serif',
     fontSize: size === 'small' ? '14px' : size === 'large' ? '18px' : '16px',
-    color: color
+    color
   };
 
   return (

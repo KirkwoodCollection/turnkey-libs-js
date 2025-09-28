@@ -71,6 +71,7 @@
     "@typescript-eslint/eslint-plugin": "^8.42.0",
     "@typescript-eslint/parser": "^8.42.0",
     "eslint": "^9.35.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "jest": "^30.1.3",
     "jest-environment-jsdom": "^30.1.2",
     "lerna": "^7.0.0",

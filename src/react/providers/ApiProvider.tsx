@@ -1,7 +1,7 @@
 // API client context provider
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { BaseApiClient } from '../../core/api-client/base-client';
+// import { BaseApiClient } from '../../core/api-client/base-client';
 import { BookingApiClient } from '../../core/api-client/booking-client';
 import { AnalyticsApiClient } from '../../core/api-client/analytics-client';
 import { ApiClientConfig } from '../../core/api-client/types';
