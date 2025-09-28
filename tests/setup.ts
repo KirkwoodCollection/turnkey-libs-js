@@ -56,7 +56,7 @@ export const TestUtils = {
   // Mock WebSocket
   createMockWebSocket: () => {
     const mockWS = {
-      readyState: WebSocket.OPEN,
+      readyState: 1, // OPEN state
       send: jest.fn(),
       close: jest.fn(),
       addEventListener: jest.fn(),
@@ -91,17 +91,44 @@ export const TestUtils = {
 
 // Global mocks
 global.fetch = jest.fn();
-global.WebSocket = jest.fn();
+
+// Mock WebSocket with all required properties
+const MockWebSocket = jest.fn().mockImplementation(() => ({
+  readyState: 1, // OPEN state
+  send: jest.fn(),
+  close: jest.fn(),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  onopen: null,
+  onclose: null,
+  onmessage: null,
+  onerror: null
+}));
+
+// Add static properties required by TypeScript
+(MockWebSocket as any).CONNECTING = 0;
+(MockWebSocket as any).OPEN = 1;
+(MockWebSocket as any).CLOSING = 2;
+(MockWebSocket as any).CLOSED = 3;
+(MockWebSocket as any).prototype = {};
+
+global.WebSocket = MockWebSocket as any;
 
 // Mock environment detection
-Object.defineProperty(global, 'window', {
-  value: {
-    location: { href: 'http://localhost:3000' },
-    localStorage: TestUtils.createMockLocalStorage(),
-    sessionStorage: TestUtils.createMockLocalStorage()
-  },
-  writable: true
-});
+if (typeof window === 'undefined') {
+  Object.defineProperty(global, 'window', {
+    value: {
+      location: { href: 'http://localhost:3000' },
+      localStorage: TestUtils.createMockLocalStorage(),
+      sessionStorage: TestUtils.createMockLocalStorage()
+    },
+    writable: true
+  });
+} else {
+  // If window exists, just ensure our mocks are available
+  (window as any).localStorage = TestUtils.createMockLocalStorage();
+  (window as any).sessionStorage = TestUtils.createMockLocalStorage();
+}
 
 // Mock process.env for Node.js environment detection
 global.process = {
