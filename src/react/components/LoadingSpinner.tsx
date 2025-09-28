@@ -10,21 +10,21 @@ export interface LoadingSpinnerProps {
   label?: string;
 }
 
-export function LoadingSpinner({ 
-  size = 'medium', 
+export function LoadingSpinner({
+  size = 'medium',
   color = '#3182ce',
   className = '',
   style = {},
-  label = 'Loading...'
+  label = 'Loading...',
 }: LoadingSpinnerProps) {
   const sizeMap = {
     small: 16,
     medium: 32,
-    large: 48
+    large: 48,
   };
 
   const spinnerSize = sizeMap[size];
-  
+
   const spinnerStyle: React.CSSProperties = {
     width: spinnerSize,
     height: spinnerSize,
@@ -32,7 +32,7 @@ export function LoadingSpinner({
     borderTop: `2px solid ${color}`,
     borderRadius: '50%',
     animation: 'turnkey-spinner-spin 1s linear infinite',
-    ...style
+    ...style,
   };
 
   const containerStyle: React.CSSProperties = {
@@ -41,7 +41,7 @@ export function LoadingSpinner({
     gap: '8px',
     fontFamily: 'system-ui, sans-serif',
     fontSize: size === 'small' ? '14px' : size === 'large' ? '18px' : '16px',
-    color
+    color,
   };
 
   return (
@@ -88,7 +88,7 @@ export function LoadingOverlay({
     justifyContent: 'center',
     zIndex,
     backgroundColor: backdrop ? backdropColor : 'transparent',
-    pointerEvents: 'all'
+    pointerEvents: 'all',
   };
 
   return (
@@ -132,21 +132,13 @@ export function LoadingButton({
     cursor: loading || disabled ? 'not-allowed' : 'pointer',
     opacity: loading || disabled ? 0.7 : 1,
     fontFamily: 'system-ui, sans-serif',
-    ...style
+    ...style,
   };
 
   return (
-    <button
-      {...buttonProps}
-      disabled={loading || disabled}
-      style={buttonStyle}
-    >
+    <button {...buttonProps} disabled={loading || disabled} style={buttonStyle}>
       {loading && (
-        <LoadingSpinner
-          size={spinnerSize}
-          color={spinnerColor || 'currentColor'}
-          label=""
-        />
+        <LoadingSpinner size={spinnerSize} color={spinnerColor || 'currentColor'} label="" />
       )}
       <span>{loading && loadingText ? loadingText : children}</span>
     </button>

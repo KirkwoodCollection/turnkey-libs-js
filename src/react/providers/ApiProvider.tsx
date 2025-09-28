@@ -34,16 +34,12 @@ export function ApiProvider({ children, config }: ApiProviderProps) {
     contextValue.analyticsClient = new AnalyticsApiClient(config.analytics);
   }
 
-  return (
-    <ApiContext.Provider value={contextValue}>
-      {children}
-    </ApiContext.Provider>
-  );
+  return <ApiContext.Provider value={contextValue}>{children}</ApiContext.Provider>;
 }
 
 export function useApiContext(): ApiContextValue {
   const context = useContext(ApiContext);
-  
+
   if (context === null) {
     throw new Error('useApiContext must be used within an ApiProvider');
   }
@@ -54,9 +50,11 @@ export function useApiContext(): ApiContextValue {
 // Convenience hooks for specific clients
 export function useBookingClient(): BookingApiClient {
   const { bookingClient } = useApiContext();
-  
+
   if (!bookingClient) {
-    throw new Error('BookingApiClient not configured. Please provide booking config to ApiProvider.');
+    throw new Error(
+      'BookingApiClient not configured. Please provide booking config to ApiProvider.'
+    );
   }
 
   return bookingClient;
@@ -64,9 +62,11 @@ export function useBookingClient(): BookingApiClient {
 
 export function useAnalyticsClient(): AnalyticsApiClient {
   const { analyticsClient } = useApiContext();
-  
+
   if (!analyticsClient) {
-    throw new Error('AnalyticsApiClient not configured. Please provide analytics config to ApiProvider.');
+    throw new Error(
+      'AnalyticsApiClient not configured. Please provide analytics config to ApiProvider.'
+    );
   }
 
   return analyticsClient;

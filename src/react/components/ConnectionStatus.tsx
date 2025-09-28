@@ -16,7 +16,7 @@ export function ConnectionStatus({
   showText = true,
   className = '',
   style = {},
-  size = 'medium'
+  size = 'medium',
 }: ConnectionStatusProps) {
   const getStatusColor = (state: ConnectionState): string => {
     switch (state) {
@@ -53,7 +53,7 @@ export function ConnectionStatus({
   const sizeMap = {
     small: { dot: 6, text: '12px', gap: '4px' },
     medium: { dot: 8, text: '14px', gap: '6px' },
-    large: { dot: 10, text: '16px', gap: '8px' }
+    large: { dot: 10, text: '16px', gap: '8px' },
   };
 
   const sizes = sizeMap[size];
@@ -67,7 +67,7 @@ export function ConnectionStatus({
     fontFamily: 'system-ui, sans-serif',
     fontSize: sizes.text,
     color: '#4a5568',
-    ...style
+    ...style,
   };
 
   const dotStyle: React.CSSProperties = {
@@ -76,9 +76,10 @@ export function ConnectionStatus({
     borderRadius: '50%',
     backgroundColor: color,
     flexShrink: 0,
-    animation: (connectionState === 'CONNECTING' || connectionState === 'RECONNECTING') 
-      ? 'turnkey-pulse 2s infinite' 
-      : undefined
+    animation:
+      connectionState === 'CONNECTING' || connectionState === 'RECONNECTING'
+        ? 'turnkey-pulse 2s infinite'
+        : undefined,
   };
 
   return (
@@ -114,34 +115,34 @@ export function DetailedConnectionStatus({
 }: DetailedConnectionStatusProps) {
   const formatLastConnected = (timestamp?: string): string => {
     if (!timestamp) return 'Never';
-    
+
     const date = new Date(timestamp);
     const now = new Date();
     const diffMs = now.getTime() - date.getTime();
     const diffMins = Math.floor(diffMs / (1000 * 60));
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    
+
     if (diffMins < 1) return 'Just now';
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
-    
+
     return date.toLocaleDateString();
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
       <ConnectionStatus {...statusProps} />
-      
+
       {showDetails && (
-        <div style={{
-          fontSize: '12px',
-          color: '#718096',
-          fontFamily: 'system-ui, sans-serif'
-        }}>
-          {lastConnected && (
-            <div>Last connected: {formatLastConnected(lastConnected)}</div>
-          )}
-          
+        <div
+          style={{
+            fontSize: '12px',
+            color: '#718096',
+            fontFamily: 'system-ui, sans-serif',
+          }}
+        >
+          {lastConnected && <div>Last connected: {formatLastConnected(lastConnected)}</div>}
+
           {statusProps.connectionState === 'RECONNECTING' && maxReconnectAttempts > 0 && (
             <div>
               Attempt {reconnectAttempts} of {maxReconnectAttempts}
@@ -165,7 +166,7 @@ export function ConnectionBadge({
   connectionState,
   size = 'medium',
   className = '',
-  style = {}
+  style = {},
 }: ConnectionBadgeProps) {
   const getStatusColor = (state: ConnectionState) => {
     switch (state) {
@@ -185,7 +186,7 @@ export function ConnectionBadge({
   const sizeMap = {
     small: { padding: '2px 6px', fontSize: '10px' },
     medium: { padding: '4px 8px', fontSize: '12px' },
-    large: { padding: '6px 12px', fontSize: '14px' }
+    large: { padding: '6px 12px', fontSize: '14px' },
   };
 
   const colors = getStatusColor(connectionState);
@@ -203,7 +204,7 @@ export function ConnectionBadge({
     color: colors.text,
     textTransform: 'uppercase' as const,
     letterSpacing: '0.025em',
-    ...style
+    ...style,
   };
 
   return (

@@ -15,16 +15,12 @@ export interface AuthProviderProps {
 export function AuthProvider({ children, options = {} }: AuthProviderProps) {
   const authReturn = useAuth(options);
 
-  return (
-    <AuthContext.Provider value={authReturn}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={authReturn}>{children}</AuthContext.Provider>;
 }
 
 export function useAuthContext(): AuthContextValue {
   const context = useContext(AuthContext);
-  
+
   if (context === null) {
     throw new Error('useAuthContext must be used within an AuthProvider');
   }
@@ -41,12 +37,12 @@ export interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-export function ProtectedRoute({ 
-  children, 
+export function ProtectedRoute({
+  children,
   requiredPermissions = [],
   requireAll = true,
   fallback = <div>Access denied</div>,
-  redirectTo
+  redirectTo,
 }: ProtectedRouteProps) {
   const { isAuthenticated, user, loading } = useAuthContext();
 
@@ -87,12 +83,12 @@ export interface ConditionalRenderProps {
   fallback?: ReactNode;
 }
 
-export function ConditionalRender({ 
-  children, 
+export function ConditionalRender({
+  children,
   permissions = [],
   roles = [],
   requireAll = true,
-  fallback = null
+  fallback = null,
 }: ConditionalRenderProps) {
   const { isAuthenticated, user } = useAuthContext();
 

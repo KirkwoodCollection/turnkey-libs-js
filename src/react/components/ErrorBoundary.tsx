@@ -51,34 +51,36 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
       // Default fallback UI
       return (
-        <div style={{
-          padding: '20px',
-          border: '1px solid #ff6b6b',
-          borderRadius: '4px',
-          backgroundColor: '#fff5f5',
-          color: '#c53030',
-          fontFamily: 'monospace',
-          margin: '20px 0'
-        }}>
+        <div
+          style={{
+            padding: '20px',
+            border: '1px solid #ff6b6b',
+            borderRadius: '4px',
+            backgroundColor: '#fff5f5',
+            color: '#c53030',
+            fontFamily: 'monospace',
+            margin: '20px 0',
+          }}
+        >
           <h2 style={{ margin: '0 0 10px 0', fontSize: '18px', fontWeight: 'bold' }}>
             Something went wrong
           </h2>
           {process.env.NODE_ENV === 'development' && error && (
             <>
               <details style={{ marginTop: '10px' }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>
-                  Error details
-                </summary>
-                <pre style={{
-                  marginTop: '10px',
-                  padding: '10px',
-                  backgroundColor: '#fff',
-                  border: '1px solid #e2e2e2',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  whiteSpace: 'pre-wrap',
-                  overflow: 'auto'
-                }}>
+                <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>Error details</summary>
+                <pre
+                  style={{
+                    marginTop: '10px',
+                    padding: '10px',
+                    backgroundColor: '#fff',
+                    border: '1px solid #e2e2e2',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    whiteSpace: 'pre-wrap',
+                    overflow: 'auto',
+                  }}
+                >
                   {error.toString()}
                   {errorInfo?.componentStack}
                 </pre>
@@ -93,7 +95,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                   border: 'none',
                   borderRadius: '4px',
                   cursor: 'pointer',
-                  fontSize: '14px'
+                  fontSize: '14px',
                 }}
               >
                 Reload page
@@ -112,7 +114,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 export function useErrorHandler() {
   return (error: Error, errorInfo?: any) => {
     console.error('Error caught by error handler:', error, errorInfo);
-    
+
     // In a real application, you might want to report this to an error tracking service
     // like Sentry, Bugsnag, etc.
   };
