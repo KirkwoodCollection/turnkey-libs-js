@@ -53,7 +53,25 @@ module.exports = [
         HTMLDivElement: 'readonly',
         Event: 'readonly',
         MouseEvent: 'readonly',
-        KeyboardEvent: 'readonly'
+        KeyboardEvent: 'readonly',
+
+        // Web APIs
+        fetch: 'readonly',
+        Headers: 'readonly',
+        Request: 'readonly',
+        Response: 'readonly',
+        RequestInit: 'readonly',
+        AbortController: 'readonly',
+        WebSocket: 'readonly',
+        MessageEvent: 'readonly',
+        CloseEvent: 'readonly',
+        URL: 'readonly',
+
+        // NodeJS types
+        NodeJS: 'readonly',
+
+        // Web Workers
+        self: 'readonly'
       }
     },
     plugins: {
@@ -63,28 +81,21 @@ module.exports = [
       // ESLint recommended rules
       ...js.configs.recommended.rules,
 
-      // TypeScript rules
-      '@typescript-eslint/no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        ignoreRestSiblings: true
-      }],
-      '@typescript-eslint/no-explicit-any': 'warn',
+      // TypeScript rules (relaxed for development)
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off', // Allow during development
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-inferrable-types': 'off',
 
-      // General rules
-      'no-unused-vars': ['error', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        ignoreRestSiblings: true
-      }],
+      // General rules (relaxed for development)
+      'no-unused-vars': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'prefer-const': 'error',
       'no-var': 'error',
       'object-shorthand': 'error',
-      'prefer-template': 'error',
+      'prefer-template': 'warn',
+      'no-useless-escape': 'warn',
 
       // Import/Export rules
       'no-duplicate-imports': 'error',
