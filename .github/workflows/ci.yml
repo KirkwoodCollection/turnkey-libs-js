@@ -147,8 +147,9 @@ jobs:
         echo "🔍 Checking for security issues..."
         
         # Check for hardcoded secrets (basic check)
-        if grep -r "password\|secret\|key" src/ --include="*.ts" --include="*.tsx" | grep -v "MOCK" | grep -v "test" | grep -v "example"; then
+        if grep -r "password\s*=\|secret\s*=\|key\s*=" src/ --include="*.ts" --include="*.tsx" | grep -v "MOCK" | grep -v "test" | grep -v "example" | grep -v "keyframes" | grep -v "keyof"; then
           echo "⚠️ Potential hardcoded secrets found"
+          exit 1
         else
           echo "✅ No obvious hardcoded secrets found"
         fi
