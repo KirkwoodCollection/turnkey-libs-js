@@ -8,6 +8,10 @@ import {
 } from '../src/services';
 
 import {
+  ENV_SUFFIX_MAP
+} from '../src/environment';
+
+import {
   PUBSUB_TOPICS,
   getTopicName,
   getSubscriptionName,
@@ -214,6 +218,59 @@ describe('Service Configuration Integration Tests', () => {
       expect(isValidRedisKey('session:user123')).toBe(true);
       expect(isValidRedisKey('cache:api:user/profile')).toBe(true);
       expect(isValidRedisKey('Invalid Key With Spaces')).toBe(false);
+    });
+  });
+
+  describe('ADR-001 Compliance Tests', () => {
+    test('Port assignments match ADR-001 canonical values', () => {
+      expect(SERVICE_CONFIGS['turnkey-events'].defaultPort).toBe(8080);
+      expect(SERVICE_CONFIGS['turnkey-analytics'].defaultPort).toBe(8001);
+      expect(SERVICE_CONFIGS['turnkey-websocket'].defaultPort).toBe(8002);
+      expect(SERVICE_CONFIGS['turnkey-session'].defaultPort).toBe(8003);
+      expect(SERVICE_CONFIGS['turnkey-gateway'].defaultPort).toBe(8005);
+      expect(SERVICE_CONFIGS['turnkey-booking-api'].defaultPort).toBe(8000);
+    });
+
+    test('WebSocket path is /ws as mandated by ADR-001', () => {
+      expect(WEBSOCKET_ROUTES.PRIMARY).toBe('/ws');
+      expect(WEBSOCKET_ROUTES.LEGACY).toBe('/websocket/ws');
+    });
+
+    test('JWT configuration matches ADR-001 specification', () => {
+      const { JWT_CONFIG, JWT_ENV_VARS, WEBSOCKET_AUTH } = require('../src/auth');
+
+      // Algorithm and claims
+      expect(JWT_CONFIG.ALGORITHM).toBe('HS256');
+      expect(JWT_CONFIG.AUDIENCE).toBe('turnkey-platform');
+      expect(JWT_CONFIG.ISSUER).toBe('turnkey-session');
+
+      // Environment variables
+      expect(JWT_ENV_VARS.WEBSOCKET_SECRET).toBe('WEBSOCKET_JWT_SECRET_KEY');
+      expect(JWT_ENV_VARS.SESSION_SECRET).toBe('SESSION_JWT_SECRET_KEY');
+
+      // WebSocket auth method
+      expect(WEBSOCKET_AUTH.TOKEN_PARAM).toBe('token');
+      expect(WEBSOCKET_AUTH.METHOD).toBe('JWT_QUERY_PARAM');
+    });
+
+    test('Auth headers follow standardization', () => {
+      const { AUTH_HEADERS } = require('../src/auth');
+
+      expect(AUTH_HEADERS.API_KEY).toBe('X-API-Key');
+      expect(AUTH_HEADERS.LEGACY_API_KEY).toBe('X-Internal-API-Key');
+    });
+
+    test('Environment suffix uses -prod not -production', () => {
+      expect(ENV_SUFFIX_MAP.production).toBe('prod');
+      expect(ENV_SUFFIX_MAP.staging).toBe('staging');
+      expect(ENV_SUFFIX_MAP.development).toBe('');
+    });
+
+    test('WebSocket service is designated as dedicated provider', () => {
+      // Verify WebSocket service is properly configured as canonical
+      expect(SERVICE_CONFIGS['turnkey-websocket']).toBeDefined();
+      expect(SERVICE_CONFIGS['turnkey-websocket'].defaultPort).toBe(8002);
+      expect(SERVICE_CONFIGS['turnkey-websocket'].maxConnections).toBe(5000);
     });
   });
 

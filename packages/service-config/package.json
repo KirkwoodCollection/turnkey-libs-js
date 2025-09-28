@@ -68,6 +68,11 @@
       "import": "./dist/bigquery.js",
       "require": "./dist/bigquery.js",
       "types": "./dist/bigquery.d.ts"
+    },
+    "./auth": {
+      "import": "./dist/auth.js",
+      "require": "./dist/auth.js",
+      "types": "./dist/auth.d.ts"
     }
   },
   "scripts": {

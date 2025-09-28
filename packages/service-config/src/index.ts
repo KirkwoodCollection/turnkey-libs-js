@@ -138,3 +138,15 @@ export {
   isValidDatasetName,
   isValidTableName
 } from './bigquery';
+
+// Authentication and JWT configuration
+export {
+  JWT_CONFIG,
+  JWT_ENV_VARS,
+  AUTH_HEADERS,
+  WEBSOCKET_AUTH,
+  buildWebSocketUrl,
+  validateAdminClaims,
+  getJwtConfig,
+  getJwtEnvVars
+} from './auth';
