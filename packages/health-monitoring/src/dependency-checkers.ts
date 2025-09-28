@@ -6,6 +6,8 @@ import {
   CacheDependencyMetadata,
   MessageQueueDependencyMetadata
 } from './types.js';
+import { TIMEOUTS } from '@turnkey/service-config';
+import { HTTP_STATUS, QUEUE_THRESHOLDS } from '@turnkey/constants';
 
 export interface DatabaseConnection {
   query(sql: string): Promise<any>;
@@ -27,7 +29,7 @@ export class DependencyCheckers {
   static async checkDatabase(
     name: string,
     connection: DatabaseConnection,
-    timeout = 5000
+    timeout = TIMEOUTS.DEPENDENCY_CHECK
   ): Promise<DependencyHealth> {
     const startTime = Date.now();
 
@@ -73,7 +75,7 @@ export class DependencyCheckers {
   static async checkRedisCache(
     name: string,
     connection: CacheConnection,
-    timeout = 5000
+    timeout = TIMEOUTS.DEPENDENCY_CHECK
   ): Promise<DependencyHealth> {
     const startTime = Date.now();
 
@@ -125,7 +127,7 @@ export class DependencyCheckers {
     url: string,
     options: { timeout?: number; expectedStatus?: number; headers?: Record<string, string> } = {}
   ): Promise<DependencyHealth> {
-    const { timeout = 5000, expectedStatus = 200, headers = {} } = options;
+    const { timeout = TIMEOUTS.DEPENDENCY_CHECK, expectedStatus = HTTP_STATUS.OK, headers = {} } = options;
     const startTime = Date.now();
 
     try {
@@ -178,7 +180,7 @@ export class DependencyCheckers {
     name: string,
     connection: MessageQueueConnection,
     queueName?: string,
-    timeout = 5000
+    timeout = TIMEOUTS.DEPENDENCY_CHECK
   ): Promise<DependencyHealth> {
     const startTime = Date.now();
 
@@ -198,10 +200,10 @@ export class DependencyCheckers {
 
       // Determine health based on queue depth if available
       let status = HealthStatus.HEALTHY;
-      if (metadata?.queueDepth && metadata.queueDepth > 10000) {
+      if (metadata?.queueDepth && metadata.queueDepth > QUEUE_THRESHOLDS.QUEUE_DEPTH_DEGRADED) {
         status = HealthStatus.DEGRADED;
       }
-      if (metadata?.queueDepth && metadata.queueDepth > 50000) {
+      if (metadata?.queueDepth && metadata.queueDepth > QUEUE_THRESHOLDS.QUEUE_DEPTH_CRITICAL) {
         status = HealthStatus.UNHEALTHY;
       }
 
@@ -228,7 +230,7 @@ export class DependencyCheckers {
   static async checkFileSystem(
     name: string,
     path: string,
-    timeout = 5000
+    timeout = TIMEOUTS.DEPENDENCY_CHECK
   ): Promise<DependencyHealth> {
     const startTime = Date.now();
 

@@ -1,0 +1,67 @@
+{
+  "name": "@turnkey/constants",
+  "version": "1.0.0",
+  "description": "Common constants and calculations for TurnkeyHMS applications",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./http-status": {
+      "import": "./dist/http-status.js",
+      "require": "./dist/http-status.js",
+      "types": "./dist/http-status.d.ts"
+    },
+    "./error-codes": {
+      "import": "./dist/error-codes.js",
+      "require": "./dist/error-codes.js",
+      "types": "./dist/error-codes.d.ts"
+    },
+    "./metrics": {
+      "import": "./dist/metrics.js",
+      "require": "./dist/metrics.js",
+      "types": "./dist/metrics.d.ts"
+    },
+    "./calculations": {
+      "import": "./dist/calculations.js",
+      "require": "./dist/calculations.js",
+      "types": "./dist/calculations.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "keywords": [
+    "turnkey",
+    "hms",
+    "constants",
+    "http",
+    "errors",
+    "metrics",
+    "calculations"
+  ],
+  "author": "TurnkeyHMS Team",
+  "license": "MIT",
+  "sideEffects": false
+}

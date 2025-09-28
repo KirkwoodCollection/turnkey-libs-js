@@ -3,6 +3,8 @@ import { HealthMonitor } from '../src/health-monitor.js';
 import { MetricsCollector, createExpressMiddleware } from '../src/metrics-collector.js';
 import { DependencyCheckers } from '../src/dependency-checkers.js';
 import { DependencyType, HealthStatus } from '../src/types.js';
+import { DEFAULT_PORTS, API_ROUTES } from '@turnkey/service-config';
+import { HTTP_STATUS } from '@turnkey/constants';
 
 // Initialize Express app
 const app = express();
@@ -105,10 +107,10 @@ setInterval(() => {
 }, 30000);
 
 // Health endpoints
-app.get('/health', async (req, res) => {
+app.get(API_ROUTES.HEALTH, async (req, res) => {
   try {
     const health = await healthMonitor.getBasicHealth();
-    const statusCode = health.status === 'unhealthy' ? 503 : 200;
+    const statusCode = health.status === 'unhealthy' ? HTTP_STATUS.SERVICE_UNAVAILABLE : HTTP_STATUS.OK;
     res.status(statusCode).json(health);
   } catch (error) {
     res.status(503).json({
@@ -120,10 +122,10 @@ app.get('/health', async (req, res) => {
   }
 });
 
-app.get('/health/detailed', async (req, res) => {
+app.get(API_ROUTES.HEALTH_DETAILED, async (req, res) => {
   try {
     const health = await healthMonitor.getDetailedHealth();
-    const statusCode = health.status === 'unhealthy' ? 503 : 200;
+    const statusCode = health.status === 'unhealthy' ? HTTP_STATUS.SERVICE_UNAVAILABLE : HTTP_STATUS.OK;
     res.status(statusCode).json(health);
   } catch (error) {
     res.status(503).json({
@@ -135,10 +137,10 @@ app.get('/health/detailed', async (req, res) => {
   }
 });
 
-app.get('/health/dependencies', async (req, res) => {
+app.get(API_ROUTES.HEALTH_DEPENDENCIES, async (req, res) => {
   try {
     const health = await healthMonitor.getDependenciesHealth();
-    const statusCode = health.status === 'unhealthy' ? 503 : 200;
+    const statusCode = health.status === 'unhealthy' ? HTTP_STATUS.SERVICE_UNAVAILABLE : HTTP_STATUS.OK;
     res.status(statusCode).json(health);
   } catch (error) {
     res.status(503).json({
@@ -151,10 +153,10 @@ app.get('/health/dependencies', async (req, res) => {
   }
 });
 
-app.get('/health/integration-test', async (req, res) => {
+app.get(API_ROUTES.HEALTH_INTEGRATION_TEST, async (req, res) => {
   try {
     const health = await healthMonitor.getIntegrationTestHealth();
-    const statusCode = health.status === 'unhealthy' ? 503 : 200;
+    const statusCode = health.status === 'unhealthy' ? HTTP_STATUS.SERVICE_UNAVAILABLE : HTTP_STATUS.OK;
     res.status(statusCode).json(health);
   } catch (error) {
     res.status(503).json({
@@ -183,17 +185,17 @@ app.get('/users', (req, res) => {
 // Error handling middleware
 app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Internal server error' });
+  res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ error: 'Internal server error' });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || DEFAULT_PORTS.MAIN_APP;
 app.listen(PORT, () => {
   console.log(`Admin Dashboard server running on port ${PORT}`);
   console.log('Health endpoints:');
-  console.log(`  GET http://localhost:${PORT}/health`);
-  console.log(`  GET http://localhost:${PORT}/health/detailed`);
-  console.log(`  GET http://localhost:${PORT}/health/dependencies`);
-  console.log(`  GET http://localhost:${PORT}/health/integration-test`);
+  console.log(`  GET http://localhost:${PORT}${API_ROUTES.HEALTH}`);
+  console.log(`  GET http://localhost:${PORT}${API_ROUTES.HEALTH_DETAILED}`);
+  console.log(`  GET http://localhost:${PORT}${API_ROUTES.HEALTH_DEPENDENCIES}`);
+  console.log(`  GET http://localhost:${PORT}${API_ROUTES.HEALTH_INTEGRATION_TEST}`);
 });
 
 export { app, healthMonitor, metricsCollector };

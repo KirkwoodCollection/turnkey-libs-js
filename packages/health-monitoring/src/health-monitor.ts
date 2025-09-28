@@ -12,6 +12,8 @@ import {
   DependencyConfig,
   HealthCheckOptions
 } from './types.js';
+import { TIMEOUTS } from '@turnkey/service-config';
+import { CONVERSION_FACTORS } from '@turnkey/constants';
 
 export class HealthMonitor {
   private serviceName: string;
@@ -69,7 +71,7 @@ export class HealthMonitor {
   async getDetailedHealth(options?: HealthCheckOptions): Promise<DetailedHealthResponse> {
     try {
       const basicHealth = await this.getBasicHealth(options);
-      const uptime = Math.floor((Date.now() - this.startTime) / 1000);
+      const uptime = Math.floor((Date.now() - this.startTime) / CONVERSION_FACTORS.MILLISECONDS_PER_SECOND);
       const memory = this.getMemoryUsage();
       const cpu = await this.getCpuUsage();
 
@@ -87,7 +89,7 @@ export class HealthMonitor {
       return {
         ...basicHealth,
         status: HealthStatus.UNHEALTHY,
-        uptime: Math.floor((Date.now() - this.startTime) / 1000),
+        uptime: Math.floor((Date.now() - this.startTime) / CONVERSION_FACTORS.MILLISECONDS_PER_SECOND),
         memory: { used: 0, total: 0, percentage: 0 },
         metrics: this.metrics
       };
@@ -203,7 +205,7 @@ export class HealthMonitor {
     return {
       used: usage.rss,
       total: totalMemory,
-      percentage: (usage.rss / totalMemory) * 100,
+      percentage: (usage.rss / totalMemory) * CONVERSION_FACTORS.PERCENT_MULTIPLIER,
       heap: {
         used: usage.heapUsed,
         total: usage.heapTotal
@@ -228,11 +230,11 @@ export class HealthMonitor {
   private async getCpuUsage(): Promise<number | undefined> {
     try {
       const startUsage = process.cpuUsage();
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, TIMEOUTS.SHORT_OPERATION));
       const endUsage = process.cpuUsage(startUsage);
       
       const totalTime = endUsage.user + endUsage.system;
-      return (totalTime / 100000) * 100;
+      return (totalTime / 100000) * CONVERSION_FACTORS.PERCENT_MULTIPLIER;
     } catch {
       return undefined;
     }
@@ -243,7 +245,7 @@ export class HealthMonitor {
     options?: HealthCheckOptions
   ): Promise<DependencyHealth> {
     const startTime = Date.now();
-    const timeout = options?.timeout || config.timeout || 5000;
+    const timeout = options?.timeout || config.timeout || TIMEOUTS.DEPENDENCY_CHECK;
 
     try {
       if (config.checkUrl) {

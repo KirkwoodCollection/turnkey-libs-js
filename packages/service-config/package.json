@@ -1,0 +1,111 @@
+{
+  "name": "@turnkey/service-config",
+  "version": "2.0.0",
+  "description": "Centralized service configuration constants for TurnkeyHMS microservices",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./environment": {
+      "import": "./dist/environment.js",
+      "require": "./dist/environment.js",
+      "types": "./dist/environment.d.ts"
+    },
+    "./service-urls": {
+      "import": "./dist/service-urls.js",
+      "require": "./dist/service-urls.js",
+      "types": "./dist/service-urls.d.ts"
+    },
+    "./timeouts": {
+      "import": "./dist/timeouts.js",
+      "require": "./dist/timeouts.js",
+      "types": "./dist/timeouts.d.ts"
+    },
+    "./ports": {
+      "import": "./dist/ports.js",
+      "require": "./dist/ports.js",
+      "types": "./dist/ports.d.ts"
+    },
+    "./routes": {
+      "import": "./dist/routes.js",
+      "require": "./dist/routes.js",
+      "types": "./dist/routes.d.ts"
+    },
+    "./thresholds": {
+      "import": "./dist/thresholds.js",
+      "require": "./dist/thresholds.js",
+      "types": "./dist/thresholds.d.ts"
+    },
+    "./pubsub": {
+      "import": "./dist/pubsub.js",
+      "require": "./dist/pubsub.js",
+      "types": "./dist/pubsub.d.ts"
+    },
+    "./firestore": {
+      "import": "./dist/firestore.js",
+      "require": "./dist/firestore.js",
+      "types": "./dist/firestore.d.ts"
+    },
+    "./redis": {
+      "import": "./dist/redis.js",
+      "require": "./dist/redis.js",
+      "types": "./dist/redis.d.ts"
+    },
+    "./services": {
+      "import": "./dist/services.js",
+      "require": "./dist/services.js",
+      "types": "./dist/services.d.ts"
+    },
+    "./bigquery": {
+      "import": "./dist/bigquery.js",
+      "require": "./dist/bigquery.js",
+      "types": "./dist/bigquery.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "@types/jest": "^29.0.0",
+    "eslint": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0"
+  },
+  "keywords": [
+    "turnkey",
+    "hms",
+    "config",
+    "service",
+    "urls",
+    "timeouts",
+    "ports",
+    "microservices",
+    "pubsub",
+    "firestore",
+    "redis",
+    "bigquery",
+    "websocket",
+    "centralized-config"
+  ],
+  "author": "TurnkeyHMS Team",
+  "license": "MIT",
+  "sideEffects": false
+}

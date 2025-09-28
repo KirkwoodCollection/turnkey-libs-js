@@ -1,4 +1,5 @@
 import { ServiceMetrics } from './types.js';
+import { METRICS_COLLECTION, HTTP_STATUS, CONVERSION_FACTORS } from '@turnkey/constants';
 
 export interface MetricsCollectorOptions {
   windowSize?: number;
@@ -16,8 +17,8 @@ export class MetricsCollector {
   private readonly windowSize: number;
 
   constructor(options: MetricsCollectorOptions = {}) {
-    this.maxSamples = options.maxSamples || 1000;
-    this.windowSize = options.windowSize || 300000; // 5 minutes
+    this.maxSamples = options.maxSamples || METRICS_COLLECTION.DEFAULT_MAX_SAMPLES;
+    this.windowSize = options.windowSize || METRICS_COLLECTION.DEFAULT_WINDOW_SIZE;
   }
 
   recordRequest(responseTime: number, isError = false): void {
@@ -83,7 +84,7 @@ export function createExpressMiddleware(collector: MetricsCollector) {
     
     res.on('finish', () => {
       const responseTime = Date.now() - startTime;
-      const isError = res.statusCode >= 400;
+      const isError = res.statusCode >= HTTP_STATUS.BAD_REQUEST;
       collector.recordRequest(responseTime, isError);
     });
 
@@ -99,7 +100,7 @@ export function createFastifyPlugin(collector: MetricsCollector) {
 
     fastify.addHook('onResponse', async (request: any, reply: any) => {
       const responseTime = Date.now() - request.startTime;
-      const isError = reply.statusCode >= 400;
+      const isError = reply.statusCode >= HTTP_STATUS.BAD_REQUEST;
       collector.recordRequest(responseTime, isError);
     });
   };
